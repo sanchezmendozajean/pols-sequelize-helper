@@ -8,7 +8,7 @@
 
 * **Filtrado Inteligente con Acentos y Diacríticos**: Genera condiciones `WHERE` insensibles a mayúsculas/minúsculas y acentos (`á`, `é`, `í`, `ó`, `ú`, `ü`) de forma nativa para MSSQL y PostgreSQL, con fallback automático para otros dialectos (MySQL, SQLite, MariaDB).
 * **Búsqueda con Comodines**: Soporte para comodines utilizando el asterisco (`*`) en los tokens de búsqueda.
-* **Paginación Automática**: Método `findAllByPage` que gestiona el cálculo total de filas (`count`) y la extracción del subconjunto paginado (`limit` y `offset`) en una sola llamada.
+* **Paginación Automática**: Método `findAllByPage` que gestiona el cálculo total de filas (`count`), el número total de páginas (`totalPages`), la página actual (`currentPage`) y la extracción del subconjunto paginado (`limit` y `offset`) en una sola llamada.
 * **Simplificación de Ordenamiento Relacionado**: Permite ordenar por campos de modelos asociados usando el alias (`as`) directamente en la definición del orden, sin necesidad de instanciar o pasar las clases del modelo manualmente.
 * **Generación de SQL Síncrona**: Métodos `selectQuery` y `countQuery` para previsualizar u obtener las cadenas SQL generadas por Sequelize sin necesidad de ejecutar la consulta contra el servidor.
 * **Evita Efectos Secundarios (Inmutabilidad)**: Clona automáticamente las opciones suministradas por el usuario antes de procesarlas para evitar la mutación inesperada de los objetos de configuración.
