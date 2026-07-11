@@ -318,11 +318,15 @@ export const findAllByPage: {
 	<T = never, P extends new () => any = new () => any>(model: P, options?: PFindOptions, config?: PFindAllByPageConfig): Promise<{
 		rows: [T] extends [never] ? InstanceType<P>[] : T[]
 		rowsCount: number
+		totalPages: number
+		currentPage: number
 	}>
 	rowsPerPage?: number
 } & PFindAllByPageConfig = async <T = never, P extends new () => any = new () => any>(model: P, options?: PFindOptions, config?: PFindAllByPageConfig): Promise<{
 	rows: [T] extends [never] ? InstanceType<P>[] : T[]
 	rowsCount: number
+	totalPages: number
+	currentPage: number
 }> => {
 		const clonedOptions = cloneFindOptions(options)
 		let page = clonedOptions?.page != null ? Math.floor(PUtilsNumber.parse(clonedOptions.page)) : -1
@@ -334,24 +338,30 @@ export const findAllByPage: {
 			})
 			return {
 				rows: records,
-				rowsCount: records.length
+				rowsCount: records.length,
+				totalPages: records.length > 0 ? 1 : 0,
+				currentPage: 1
 			}
 		} else {
 			const rowsCount = await count(model, {
 				...clonedOptions,
 				attributes: undefined
 			})
+			const totalPages = Math.ceil(rowsCount / rowsPerPage)
 			if (!rowsCount) {
 				return {
 					rows: [],
-					rowsCount
+					rowsCount,
+					totalPages: 0,
+					currentPage: page
 				}
 			}
-			const limitPage = Math.max(Math.ceil(rowsCount / rowsPerPage), 1)
-			if (page > limitPage) {
+			if (page > totalPages) {
 				return {
 					rows: [],
-					rowsCount
+					rowsCount,
+					totalPages,
+					currentPage: page
 				}
 			}
 
@@ -366,7 +376,9 @@ export const findAllByPage: {
 
 			return {
 				rows,
-				rowsCount
+				rowsCount,
+				totalPages,
+				currentPage: page
 			}
 		}
 	}

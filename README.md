@@ -73,8 +73,10 @@ const resultado = await findAllByPage(Producto, {
   order: [['Nombre', 'asc']]
 });
 
-console.log(resultado.rows);      // Array de 10 productos (página 2)
-console.log(resultado.rowsCount); // Total de productos que cumplen la condición
+console.log(resultado.rows);        // Array de 10 productos (página 2)
+console.log(resultado.rowsCount);   // Total de productos que cumplen la condición
+console.log(resultado.totalPages);  // Total de páginas calculadas
+console.log(resultado.currentPage); // Página actual devuelta
 ```
 
 ---

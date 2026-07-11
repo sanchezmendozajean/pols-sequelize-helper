@@ -112,6 +112,51 @@ async function runTests() {
 		}
 	}
 
+	// --- PRUEBA 6: findAllByPage devuelve totalPages y currentPage ---
+	console.log("Probando findAllByPage con mocks para verificar totalPages y currentPage...");
+	const originalCount = TestCustomTable.count;
+	const originalFindAll = TestCustomTable.findAll;
+
+	try {
+		// Mock count para retornar 13 registros
+		TestCustomTable.count = async function(): Promise<number> {
+			return 13;
+		} as any;
+
+		// Mock findAll para retornar un array ficticio
+		TestCustomTable.findAll = async function(): Promise<any[]> {
+			return [{ id: 1 }, { id: 2 }];
+		} as any;
+
+		const result = await findAllByPage(TestCustomTable, {
+			page: 2,
+			rowsPerPage: 5
+		});
+
+		console.log("Resultado de findAllByPage mockeado:", result);
+		if (result.currentPage === 2 && result.totalPages === 3 && result.rowsCount === 13) {
+			console.log("✅ OK: findAllByPage devuelve currentPage y totalPages correctos.");
+		} else {
+			console.error("❌ ERROR: Valores devueltos incorrectos en findAllByPage paginado.");
+		}
+
+		// Caso sin paginación (page < 1)
+		const resultNoPage = await findAllByPage(TestCustomTable, {
+			page: 0,
+			rowsPerPage: 5
+		});
+		console.log("Resultado de findAllByPage mockeado (sin paginación):", resultNoPage);
+		if (resultNoPage.currentPage === 1 && resultNoPage.totalPages === 1 && resultNoPage.rowsCount === 2) {
+			console.log("✅ OK: findAllByPage sin paginación devuelve currentPage: 1 y totalPages: 1.");
+		} else {
+			console.error("❌ ERROR: Valores devueltos incorrectos en findAllByPage sin paginación.");
+		}
+	} finally {
+		// Restauramos los métodos originales
+		TestCustomTable.count = originalCount;
+		TestCustomTable.findAll = originalFindAll;
+	}
+
 	console.log("=== FIN DE LAS PRUEBAS ===");
 }
 
