@@ -140,7 +140,9 @@ export const makeFilterCondition = (model: typeof Model, params: PFilter): Where
 									sequelize.fn('replace',
 										sequelize.fn('replace',
 											sequelize.fn('replace',
-												col,
+												sequelize.fn('replace',
+													col,
+													'ñ', 'n'),
 												'ü', 'u'),
 											'ú', 'u'),
 										'ó', 'o'),
@@ -152,7 +154,7 @@ export const makeFilterCondition = (model: typeof Model, params: PFilter): Where
 					break
 				}
 				case 'postgres':
-					opAnd.push(sequelize.where(sequelize.fn('translate', col, 'áéíóúü', 'aeiouu'),
+					opAnd.push(sequelize.where(sequelize.fn('translate', col, 'áéíóúüñ', 'aeiouun'),
 						{ [Op.like]: likeValue }
 					))
 					break
